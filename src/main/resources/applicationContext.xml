@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="adminDao" class="com.kaishengit.dao.AdminDao"/>
+
+    <bean id="aopAspect" class="com.kaishengit.aop.AopAspect"/>
+
+    <bean id="adminService" class="com.kaishengit.service.impl.AdminServiceImpl">
+        <property name="adminDao" ref="adminDao"/>
+    </bean>
+
+    <aop:config>
+        <aop:aspect ref="aopAspect">
+            <aop:pointcut id="pointcut" expression="execution(* com.kaishengit.service..*.*(..))"/>
+
+            <aop:before method="beforeAdvice" pointcut-ref="pointcut"/>
+            <aop:after-returning method="afterReturning" pointcut-ref="pointcut" returning="count"/>
+            <aop:after-throwing method="throwing" pointcut-ref="pointcut" throwing="ex"/>
+            <aop:after method="after" pointcut-ref="pointcut"/>
+
+        </aop:aspect>
+
+    </aop:config>
+
+</beans>
